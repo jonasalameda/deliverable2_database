@@ -51,4 +51,16 @@ CREATE TABLE Trip (
 	Trip_End TIME,
 	Tour_ID CHAR(6) CONSTRAINT Trip_Tour_ID_FK FOREIGN KEY (Tour_ID) REFERENCES (Tour),
 	Guide_ID CHAR(6) CONSTRAINT Tour_Guide_ID_FK FOREIGN KEY (Guide_ID) REFERENCES (Guide)
+);
+
+CREATE TABLE Transaction (
+	Txn_ID CHAR(6) CONSTRAINT Transaction_Txn_ID_PK PRIMARY KEY (Txn_ID),
+	Txn_Dot DATE,
+	Txn_Amount MONEY
+);
+
+CREATE TABLE Tourist(
+	Tourist_ID CHAR(6) CONSTRAINT Tourist_Tourist_ID_PK PRIMARY KEY (Tourist_ID),
+	Tourist_Name VARCHAR(30),
+	Tourist_Phone VARCHAR(11)
 )
