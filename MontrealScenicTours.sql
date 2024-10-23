@@ -116,3 +116,9 @@ ALTER location_ID INT IDENTITY(100001,1);
 
 ALTER TABLE location
 ALTER location_name ADD CONSTRAINT location_name_UK UNIQUE;
+
+ALTER TABLE tour
+ALTER tour_name ADD CONSTRAINT tour_name_UK UNIQUE;
+
+ALTER TABLE trip
+ALTER trip_name ADD CONSTRAINT trip_name_UK UNIQUE;
