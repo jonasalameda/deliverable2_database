@@ -36,13 +36,20 @@ CREATE TABLE Tour (
 );
 
 CREATE TABLE Guide (
-	Guide_ID CHAR(6) CONSTRAINT Guide_Guide_ID_pk PRIMARY KEY (Guide_ID),
+	Guide_ID CHAR(6) CONSTRAINT Guide_Guide_ID_PK PRIMARY KEY (Guide_ID),
 	Guide_Name VARCHAR(30),
 	Guide_DOH DATE,
 	Qual_ID CHAR(6) CONSTRAINT Guide_Qual_ID_FK FOREIGN KEY (Qual_ID) REFERENCES (Qualification),
 	Addr_ID CHAR(6) CONSTRAINT Guide_Addr_ID_FK FOREIGN KEY (Addr_ID) REFERENCES (Address),
 	Tour_ID CHAR(6) CONSTRAINT Guide_Tour_ID_FK FOREIGN KEY (Tour_ID) REFERENCES (Tour)
 );
+
+--CHANGE NAME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+CREATE TABLE TourGuide (
+	Tour_ID CHAR(6) CONSTRAINT Tour_Tour_ID_FK FOREIGN KEY (Tour_ID) REFERENCES (Tour),
+	Guide_ID CHAR(6) CONSTRAINT Guide_Guide_ID_FK FOREIGN KEY (Guide_ID) REFERENCES (Guide),
+	PRIMARY KEY (Tour_ID, Guide_ID)
+)
 
 CREATE TABLE Trip (
 	Trip_ID CHAR(6) CONSTRAINT Trip_Trip_ID_PK PRIMARY KEY (Trip_ID),
@@ -52,6 +59,13 @@ CREATE TABLE Trip (
 	Tour_ID CHAR(6) CONSTRAINT Trip_Tour_ID_FK FOREIGN KEY (Tour_ID) REFERENCES (Tour),
 	Guide_ID CHAR(6) CONSTRAINT Tour_Guide_ID_FK FOREIGN KEY (Guide_ID) REFERENCES (Guide)
 );
+
+--CHANGE NAME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+CREATE TABLE TripGuide (
+	Trip_ID CHAR(6) CONSTRAINT Trip_Trip_ID_FK FOREIGN KEY (Trip_ID) REFERENCES (Trip),
+	Guide_ID CHAR(6) CONSTRAINT Guide_Guide_ID_FK FOREIGN KEY (Guide_ID) REFERENCES (Guide),
+	PRIMARY KEY (Trip_ID, Guide_ID)
+)
 
 CREATE TABLE Transaction (
 	Txn_ID CHAR(6) CONSTRAINT Transaction_Txn_ID_PK PRIMARY KEY (Txn_ID),
