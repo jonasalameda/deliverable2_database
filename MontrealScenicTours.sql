@@ -17,6 +17,15 @@ CREATE TABLE Qualification (
 	Tour_ID CHAR (6) CONSTRAINT Qualification_Tour_ID_FK FOREIGN KEY (Tour_ID) REFERENCES (Tour),
 );
 
+CREATE TABLE Location (
+	Loc_ID CHAR (6) CONSTRAINT Location_Loc_ID_FK PRIMARY KEY (Loc_ID),
+	Loc_Name VARCHAR(30),
+	Loc_Type VARCHAR(12),
+	Loc_Desc VARCHAR(45),
+	Loc_Idx INT,
+	Addr_ID CHAR(6) CONSTRAINT Location_Addr_ID_FK FOREIGN KEY (Addr_ID) REFERENCES (Address)
+)
+
 CREATE TABLE Tour (
 	Tour_ID CHAR(6) CONSTRAINT Tour_Tour_ID_PK PRIMARY KEY (Tour_ID),
 	Tour_Name VARCHAR(20),
