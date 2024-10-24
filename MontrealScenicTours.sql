@@ -17,12 +17,12 @@ CREATE TABLE Qualification (
 	Tour_ID CHAR (6) CONSTRAINT Qualification_Tour_ID_FK FOREIGN KEY (Tour_ID) REFERENCES (Tour),
 );
 
-CREATE TABLE Location (
-	Loc_ID CHAR (6) CONSTRAINT Location_Loc_ID_PK PRIMARY KEY (Loc_ID), //just changed the syntax it was written Id_FK
-	Loc_Name VARCHAR(30),
-	Loc_Type VARCHAR(12),
-	Loc_Desc VARCHAR(45),
-	Loc_Idx INT,
+CREATE TABLE Venue (
+	Ven_ID CHAR (6) CONSTRAINT Location_Loc_ID_PK PRIMARY KEY (Loc_ID), //just changed the syntax it was written Id_FK
+	Ven_Name VARCHAR(30),
+	Ven_Type VARCHAR(12),
+	Ven_Desc VARCHAR(45),
+	Ven_Idx INT,
 	Addr_ID CHAR(6) CONSTRAINT Location_Addr_ID_FK FOREIGN KEY (Addr_ID) REFERENCES (Address)
 )
 
@@ -40,7 +40,7 @@ CREATE TABLE Guide (
 	Guide_Name VARCHAR(30),
 	Guide_DOH DATE,
 	Qual_ID CHAR(6) CONSTRAINT Guide_Qual_ID_FK FOREIGN KEY (Qual_ID) REFERENCES (Qualification),
-	Addr_ID CHAR(6) CONSTRAINT Guide_Addr_ID_FK FOREIGN KEY (Addr_ID) REFERENCES (Address),
+	Addr_ID CHAR(6) CONSTRAINT Guide_Addr_ID_FK FOREIGN KEY (Addr_ID) REFERENCES (Address)
 );
 
 --CHANGE NAME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -71,10 +71,10 @@ CREATE TABLE TripLocation (
 	PRIMARY KEY (Trip_ID, Loc_ID)
 )
 
-CREATE TABLE Transaction (
-	Txn_ID CHAR(6) CONSTRAINT Transaction_Txn_ID_PK PRIMARY KEY (Txn_ID),
-	Txn_Dot DATE,
-	Txn_Amount MONEY
+CREATE TABLE Invoice (
+	Inv_ID CHAR(6) CONSTRAINT Transaction_Txn_ID_PK PRIMARY KEY (Txn_ID),
+	Inv_Dot DATE,
+	Inv_Amount MONEY
 );
 
 CREATE TABLE Tourist(
@@ -83,15 +83,18 @@ CREATE TABLE Tourist(
 	Tourist_Phone VARCHAR(11)
 )
 
-CREATE SEQUENCE touristID_next //maybe 
-START WITH 100001
+CREATE SEQUENCE touristID_next --maybe 
+START WITH 1000
 INCREMENT BY 1
 MINVALUE 1000
-MAXVALUE 2001
+MAXVALUE 9999
 NO CYCLE 
 NO CACHE;
+SELECT * FROM Tourist
 
-CREATE SEQUENCE guideID_next //maybe
+INSERT INTO Tourist VALUES (CONCAT('TR',NEXT VALUE FOR touristID_next), 'Someone', '1234-5678')
+
+CREATE SEQUENCE guideID_next --maybe
 START WITH 100001
 INCREMENT BY 1
 MINVALUE 1000
