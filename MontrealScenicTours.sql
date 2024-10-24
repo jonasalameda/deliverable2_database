@@ -28,40 +28,34 @@ CREATE TABLE Qualification (
 
 CREATE TABLE Venue (
 	Ven_ID CHAR (6) CONSTRAINT Venue_Loc_ID_PK PRIMARY KEY (Ven_ID), --just changed the syntax it was written Id_FK
-	Ven_Name VARCHAR(30),
+	Ven_Name VARCHAR(30) CONSTRAINT Venue_Ven_Name_UK UNIQUE,
 	Ven_Type VARCHAR(12),
 	Ven_Desc VARCHAR(45),
-	Ven_Idx INT,
+	Ven_Idx INT IDENTITY (100000, 1),
 	Addr_ID CHAR(6) CONSTRAINT Venue_Addr_ID_FK FOREIGN KEY (Addr_ID) REFERENCES (Address)
 );
 
 CREATE TABLE Tour (
 	Tour_ID CHAR(6) CONSTRAINT Tour_Tour_ID_PK PRIMARY KEY (Tour_ID),
-	Tour_Name VARCHAR(20),
+	Tour_Name VARCHAR(20) CONSTRAINT Venue_Ven_Name_UK UNIQUE,
 	Tour_Dur INT,
 	Tour_Fee MONEY,
-	Tour_Order VARCHAR(6),
+	Tour_Order INT IDENTITY (100000, 1),
 );
 
 CREATE TABLE Trip (
 	Trip_ID CHAR(6) CONSTRAINT Trip_Trip_ID_PK PRIMARY KEY (Trip_ID),
-	Trip_Name VARCHAR(20),
+	Trip_Name VARCHAR(20) CONSTRAINT Trip_Trip_Name_UK UNIQUE,
 	Trip_Start TIME,
 	Trip_End TIME,
 );
 
 --CHANGE NAME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-CREATE TABLE TripLocation (
+CREATE TABLE Visit (
 	Trip_ID CHAR(6) CONSTRAINT Trip_Trip_ID_FK FOREIGN KEY (Trip_ID) REFERENCES (Trip),
-	Loc_ID CHAR(6) CONSTRAINT Location_Loc_ID_FK FOREIGN KEY (Loc_ID) REFERENCES (Location),
-	PRIMARY KEY (Trip_ID, Loc_ID)
+	Tourist_ID CHAR(6) CONSTRAINT Tourist_Tourist_ID_FK FOREIGN KEY (Tourist_ID) REFERENCES (Tourist),
+	PRIMARY KEY (Trip_ID, Tourist_ID)
 )
-
-CREATE TABLE Invoice (
-	Inv_ID CHAR(6) CONSTRAINT Transaction_Txn_ID_PK PRIMARY KEY (Txn_ID),
-	Inv_Dot DATE,
-	Inv_Amount MONEY
-);
 
 CREATE TABLE Tourist(
 	Tourist_ID CHAR(6) CONSTRAINT Tourist_Tourist_ID_PK PRIMARY KEY (Tourist_ID),
@@ -88,8 +82,6 @@ MAXVALUE 2001
 NO CYCLE 
 NO CACHE;
 
-ALTER TABLE transaction 
-ALTER transaction_ID INT;
 
 CREATE SEQUENCE transactionID_next 
 START WITH 100001
