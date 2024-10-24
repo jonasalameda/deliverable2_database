@@ -11,20 +11,29 @@ CREATE TABLE Address (
 	Addr_Postal CHAR(6) 
 );
 
+CREATE TABLE Guide (
+	Guide_ID CHAR(6) CONSTRAINT Guide_Guide_ID_PK PRIMARY KEY (Guide_ID),
+	Guide_Name VARCHAR(30),
+	Guide_DOH DATE,
+	Addr_ID CHAR(6) CONSTRAINT Guide_Addr_ID_FK FOREIGN KEY (Addr_ID) REFERENCES (Address)
+);
+
 CREATE TABLE Qualification (
-	Qual_ID CHAR(6) CONSTRAINT Qualification_Qual_ID_PK PRIMARY KEY (Qual_ID),
-	is_Qualified BIT CHECK (is_Qualified = 0 OR is_Qualified = 1),
+	Guide_ID CHAR(6) CONSTRAINT Qualification_Guide_ID_FK FOREIGN KEY (Guide_ID) REFERENCES Guide,
 	Tour_ID CHAR (6) CONSTRAINT Qualification_Tour_ID_FK FOREIGN KEY (Tour_ID) REFERENCES (Tour),
+	Qual_Is_Rqd BIT CHECK (Qual_Is_Rqd = 0 OR Qual_Is_Rqd = 1),
+	Qual_Date DATE,
+	PRIMARY KEY (Guide_ID, Tour_ID)
 );
 
 CREATE TABLE Venue (
-	Ven_ID CHAR (6) CONSTRAINT Location_Loc_ID_PK PRIMARY KEY (Loc_ID), //just changed the syntax it was written Id_FK
+	Ven_ID CHAR (6) CONSTRAINT Venue_Loc_ID_PK PRIMARY KEY (Ven_ID), --just changed the syntax it was written Id_FK
 	Ven_Name VARCHAR(30),
 	Ven_Type VARCHAR(12),
 	Ven_Desc VARCHAR(45),
 	Ven_Idx INT,
-	Addr_ID CHAR(6) CONSTRAINT Location_Addr_ID_FK FOREIGN KEY (Addr_ID) REFERENCES (Address)
-)
+	Addr_ID CHAR(6) CONSTRAINT Venue_Addr_ID_FK FOREIGN KEY (Addr_ID) REFERENCES (Address)
+);
 
 CREATE TABLE Tour (
 	Tour_ID CHAR(6) CONSTRAINT Tour_Tour_ID_PK PRIMARY KEY (Tour_ID),
@@ -32,23 +41,7 @@ CREATE TABLE Tour (
 	Tour_Dur INT,
 	Tour_Fee MONEY,
 	Tour_Order VARCHAR(6),
-	Guide_ID CHAR(6) CONSTRAINT Tour_Guide_ID_FK FOREIGN KEY (Guide_ID) REFERENCES (Guide),
 );
-
-CREATE TABLE Guide (
-	Guide_ID CHAR(6) CONSTRAINT Guide_Guide_ID_PK PRIMARY KEY (Guide_ID),
-	Guide_Name VARCHAR(30),
-	Guide_DOH DATE,
-	Qual_ID CHAR(6) CONSTRAINT Guide_Qual_ID_FK FOREIGN KEY (Qual_ID) REFERENCES (Qualification),
-	Addr_ID CHAR(6) CONSTRAINT Guide_Addr_ID_FK FOREIGN KEY (Addr_ID) REFERENCES (Address)
-);
-
---CHANGE NAME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-CREATE TABLE TourGuide (
-	Tour_ID CHAR(6) CONSTRAINT Tour_Tour_ID_FK FOREIGN KEY (Tour_ID) REFERENCES (Tour),
-	Guide_ID CHAR(6) CONSTRAINT Guide_Guide_ID_FK FOREIGN KEY (Guide_ID) REFERENCES (Guide),
-	PRIMARY KEY (Tour_ID, Guide_ID)
-)
 
 CREATE TABLE Trip (
 	Trip_ID CHAR(6) CONSTRAINT Trip_Trip_ID_PK PRIMARY KEY (Trip_ID),
@@ -56,13 +49,6 @@ CREATE TABLE Trip (
 	Trip_Start TIME,
 	Trip_End TIME,
 );
-
---CHANGE NAME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-CREATE TABLE TripGuide (
-	Trip_ID CHAR(6) CONSTRAINT Trip_Trip_ID_FK FOREIGN KEY (Trip_ID) REFERENCES (Trip),
-	Guide_ID CHAR(6) CONSTRAINT Guide_Guide_ID_FK FOREIGN KEY (Guide_ID) REFERENCES (Guide),
-	PRIMARY KEY (Trip_ID, Guide_ID)
-)
 
 --CHANGE NAME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CREATE TABLE TripLocation (
