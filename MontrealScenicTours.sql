@@ -27,7 +27,7 @@ CREATE TABLE Qualification (
 );
 
 CREATE TABLE Venue (
-	Ven_ID CHAR (6) CONSTRAINT Venue_Loc_ID_PK PRIMARY KEY (Ven_ID), --just changed the syntax it was written Id_FK
+	Ven_ID CHAR (6) CONSTRAINT Venue_Loc_ID_PK PRIMARY KEY (Ven_ID),
 	Ven_Name VARCHAR(30) CONSTRAINT Venue_Ven_Name_UK UNIQUE,
 	Ven_Type VARCHAR(12),
 	Ven_Desc VARCHAR(45),
@@ -56,7 +56,6 @@ CREATE TABLE Trip (
 	Trip_End TIME,
 );
 
---CHANGE NAME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CREATE TABLE Visit (
 	Trip_ID CHAR(6) CONSTRAINT Trip_Trip_ID_FK FOREIGN KEY (Trip_ID) REFERENCES (Trip),
 	Tourist_ID CHAR(6) CONSTRAINT Tourist_Tourist_ID_FK FOREIGN KEY (Tourist_ID) REFERENCES (Tourist),
