@@ -43,6 +43,12 @@ CREATE TABLE Tour (
 	Tour_Order INT IDENTITY (100000, 1),
 );
 
+CREATE TABLE TourSite (
+	Ven_ID CHAR (6) CONSTRAINT TourSite_Ven_ID_FK FOREIGN KEY (Ven_ID) REFERENCES Venue,
+	Tour_ID CHAR(6) CONSTRAINT TourSite_Tour_ID_FK FOREIGN KEY (Tour_ID) REFERENCES Tour,
+	PRIMARY KEY (Ven_ID, Tour_ID)
+)
+
 CREATE TABLE Trip (
 	Trip_ID CHAR(6) CONSTRAINT Trip_Trip_ID_PK PRIMARY KEY (Trip_ID),
 	Trip_Name VARCHAR(20) CONSTRAINT Trip_Trip_Name_UK UNIQUE,
@@ -60,8 +66,9 @@ CREATE TABLE Visit (
 CREATE TABLE Tourist(
 	Tourist_ID CHAR(6) CONSTRAINT Tourist_Tourist_ID_PK PRIMARY KEY (Tourist_ID),
 	Tourist_Name VARCHAR(30),
-	Tourist_Phone VARCHAR(11)
-)
+	Tourist_Phone VARCHAR(11),
+	Addr_ID CHAR(6) CONSTRAINT Tourist_Addr_ID_FK FOREIGN KEY (Addr_ID) REFERENCES (Address)
+);
 
 CREATE SEQUENCE touristID_next --maybe 
 START WITH 1000
@@ -91,15 +98,3 @@ MAXVALUE 2001
 NO CYCLE 
 NO CACHE;
 
-
-ALTER TABLE location 
-ALTER location_ID INT IDENTITY(100001,1);
-
-ALTER TABLE location
-ALTER location_name ADD CONSTRAINT location_name_UK UNIQUE;
-
-ALTER TABLE tour
-ALTER tour_name ADD CONSTRAINT tour_name_UK UNIQUE;
-
-ALTER TABLE trip
-ALTER trip_name ADD CONSTRAINT trip_name_UK UNIQUE;
