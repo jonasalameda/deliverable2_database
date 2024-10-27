@@ -173,12 +173,17 @@ VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),1234,'Lemieux Avenue', 'Montrea
 VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),5647,'Tardif Street', 'Montreal', 'H7L 3C9'),
 VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),9634,'Kennedy Street', 'Montreal', 'H8R 4R7'),
 VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),8820,'Maisonneuve Boulevard', 'Montreal', 'H2C 2V4'),
-VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),8133,'Original Street', 'Montreal', 'H9N 3B6'),
+VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),8133,'Original Street', 'Montreal', 'H9N 3B6');
 
 
 /*Guides*/
 INSERT INTO Guide
-VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'John Smith', '10-09-1993', '514-567-8910', 'johnSmith@gmail.com', 'AD1001'), 
+VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'John Smith', '10-09-2006', '514-567-8910', 'johnSmith@gmail.com', 'AD1002'), 
+VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'Jane Austen', '23-02-2009', '514-527-8022', 'janeAusten@gmail.com', 'AD1005'), 
+VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'Linda Nordstrom', '21-04-2014', '514-522-4858', 'nordstromLinda@gmail.com', 'AD1003'), 
+VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'Kevin Hart', '30-09-2015', '514-986-3214', 'hartK@gmail.com', 'AD1001'), 
+VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'Andrea Balazar', '23-11-2015', '514-963-4466', 'andreaB@gmail.com', 'AD1004'); 
+
 
 /*Tourist*/
 INSERT INTO Tourist 
