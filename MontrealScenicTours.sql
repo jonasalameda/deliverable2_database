@@ -178,7 +178,7 @@ VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),8133,'Original Street', 'Montre
 
 /*Guides*/
 INSERT INTO Guide
-VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'John Smith', '10-09-2006', '514-567-8910', 'johnSmith@gmail.com', 'AD1002'), 
+VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'John Smith', '10-09-2006', '514-567-8910', NULL, 'AD1002'), 
 VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'Jane Austen', '23-02-2009', '514-527-8022', 'janeAusten@gmail.com', 'AD1005'), 
 VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'Linda Nordstrom', '21-04-2014', '514-522-4858', 'nordstromLinda@gmail.com', 'AD1003'), 
 VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'Kevin Hart', '30-09-2015', '514-986-3214', 'hartK@gmail.com', 'AD1001'), 
@@ -187,8 +187,11 @@ VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'Andrea Balazar', '23-11-2015',
 
 /*Tourist*/
 INSERT INTO Tourist 
-VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Beyonce Carter', '514-123-5678', 'carterB@gmail.com', 'AD1001'),
-
+VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Beyonce Carter', '514-123-5678', 'carterB@gmail.com', 'AD1003'),
+VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Justin Power', '514-447-9664', 'PowerJ@gmail.com', 'AD1001'),
+VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Penelope Garcia', '514-331-6998', 'PenelopeG@gmail.com', 'AD1004'),
+VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Janine Teagues', '514-323-2323', NULL, 'AD1005'),
+VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Minwan Kim', '514-119-8678', 'minwanKim@gmail.com', 'AD1002');
 
 /*Tour*/
 INSERT INTO Tour 
