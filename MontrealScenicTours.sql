@@ -134,6 +134,30 @@ MAXVALUE 9999
 NO CYCLE 
 NO CACHE;
 
+CREATE SEQUENCE tourVenueID_next --maybe 
+START WITH 1000
+INCREMENT BY 1
+MINVALUE 1000
+MAXVALUE 9999
+NO CYCLE 
+NO CACHE;
+
+CREATE SEQUENCE tripID_next --maybe 
+START WITH 1000
+INCREMENT BY 1
+MINVALUE 1000
+MAXVALUE 9999
+NO CYCLE 
+NO CACHE;
+
+CREATE SEQUENCE visitID_next --maybe 
+START WITH 1000
+INCREMENT BY 1
+MINVALUE 1000
+MAXVALUE 9999
+NO CYCLE 
+NO CACHE;
+
 
 
 
@@ -144,15 +168,21 @@ NO CACHE;
 
 
 /*Place*/
-INSERT INTO Place VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next), 'Someone', '1234-5678')
+INSERT INTO Place 
+VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),1234,'Lemieux Avenue', 'Montreal', 'H8N 2B6'),
+VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),5647,'Tardif Street', 'Montreal', 'H7L 3C9'),
+VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),9634,'Kennedy Street', 'Montreal', 'H8R 4R7'),
+VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),8820,'Maisonneuve Boulevard', 'Montreal', 'H2C 2V4'),
+VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),8133,'Original Street', 'Montreal', 'H9N 3B6'),
+
 
 /*Guides*/
 INSERT INTO Guide
-VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next), 'Someone', '1234-5678')
+VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'John Smith', '10-09-1993', '514-567-8910', 'johnSmith@gmail.com', 'AD1001'), 
 
 /*Tourist*/
 INSERT INTO Tourist 
-VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Someone', '1234-5678')
+VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Beyonce Carter', '514-123-5678', 'carterB@gmail.com', 'AD1001'),
 
 
 /*Tour*/
@@ -171,7 +201,8 @@ VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),
 
 /*TourVenue*/
 
-INSERT INTO Venue VALUES (CONCAT('VN',NEXT VALUE FOR venueID_next), 'Someone', '1234-5678')
+INSERT INTO TourVenue
+VALUES (CONCAT('VN',NEXT VALUE FOR tourVenueID_next), 'Someone', '1234-5678')
 
 /*Trip*/
 INSERT INTO Trip 
