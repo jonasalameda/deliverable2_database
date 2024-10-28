@@ -1,10 +1,34 @@
-[33mcommit 65a10c8661792519299bbf2dabbb1a17dcda93d4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+[33mcommit 5b1cbefbedc456f6669de25e06d0335352b664da[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: %username% <%email%>
+Date:   Sun Oct 27 19:26:14 2024 -0400
+
+    Inserted Values into Toursit Table
+
+[33mcommit bd1babbb274869a6acc30ba52a85c96007f9c021[m
+Author: %username% <%email%>
+Date:   Sun Oct 27 19:19:42 2024 -0400
+
+    Inserted Values into Guide Table
+
+[33mcommit fbf9dba2664f108234babea6bbe813f2ab3eb646[m
+Author: %username% <%email%>
+Date:   Sun Oct 27 19:12:23 2024 -0400
+
+    Inserted values for Place Table 'i gotta be honest it is totally random so for sure they do not exist but i think they seem fairly believable' inserted one line for guide and Tourist
+
+[33mcommit e04756b5ddcfe12ed51d99c2c7f46f45bccb83aa[m
+Author: %username% <%email%>
+Date:   Sun Oct 27 18:52:56 2024 -0400
+
+    changed the order of our sequences to match the order  in which we created tables and insert values
+
+[33mcommit 65a10c8661792519299bbf2dabbb1a17dcda93d4[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
 Author: %username% <%email%>
 Date:   Fri Oct 25 15:44:34 2024 -0400
 
     2 alter tables for unique constraint, ON DELETE added directly to the table and added non null constraints to table directly as well
 
-[33mcommit 551e061d6413e9fa41b4159c5bec3d0839ff0dce[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+[33mcommit 551e061d6413e9fa41b4159c5bec3d0839ff0dce[m
 Author: sr-delightfully <%email%>
 Date:   Fri Oct 25 14:10:07 2024 -0400
 
