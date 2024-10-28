@@ -70,6 +70,11 @@ CREATE TABLE Visit (
 	PRIMARY KEY (Trip_ID, Tourist_ID)
 )
 
+CREATE INDEX idx_Tourist_Phone ON Tourist (Tourist_Phone);
+
+CREATE INDEX idx_Guide_Phone ON Guide (Guide_Phone);
+
+
 ALTER TABLE Tour
 ALTER COLUMN Tour_name ADD CONSTRAINT Tour_name_UK UNIQUE;
 
