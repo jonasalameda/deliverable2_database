@@ -34,7 +34,7 @@ CREATE TABLE Tour (
 	Tour_Order INT IDENTITY (100000, 1),
 );
 
-CREATE TABLE Qualification (g
+CREATE TABLE Qualification (
 	Guide_ID CHAR(6) CONSTRAINT Qualification_Guide_ID_FK FOREIGN KEY (Guide_ID) REFERENCES Guide(Guide_ID) ON DELETE CASCADE,
 	Tour_ID CHAR (6) CONSTRAINT Qualification_Tour_ID_FK FOREIGN KEY (Tour_ID) REFERENCES Tour(Tour_ID),
 	Qual_Is_Rqd BIT CHECK (Qual_Is_Rqd = 0 OR Qual_Is_Rqd = 1),
