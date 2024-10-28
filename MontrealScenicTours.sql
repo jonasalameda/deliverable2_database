@@ -190,9 +190,9 @@ VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Minwan Kim', '514-119-8678'
 INSERT INTO Tour 
 VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Downtown Tour', 80, 34.99),
 VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Plateu Tour', 105, 63.99),
+VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Mont Royal Tour', 75, 29.99),
 VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Old Port Tour', 135, 49.99),
-VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'WestMount Tour', 75, 54.99),
-VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Acadie Tour', 75, 29.99);
+VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'WestMount Tour', 75, 54.99);
 
 
 /*Qualification*/
@@ -206,16 +206,22 @@ VALUES(CONCAT('QU',NEXT VALUE FOR qualID_next),'TR1002', 'GD1003', 1, '26-03-201
 /*Venue*/
 INSERT INTO Venue
 VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'La Roue de Mtl','Touristic Attraction','Montreal wheel is in old port','AD1005'), 
-VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'La Roue de Mtl','Touristic Attraction','Montreal wheel is in old port','AD1003'), 
-VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'La Roue de Mtl','Touristic Attraction','Montreal wheel is in old port','AD1002'), 
-VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'La Roue de Mtl','Touristic Attraction','Montreal wheel is in old port','AD1004'), 
-VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'La Roue de Mtl','Touristic Attraction','Montreal wheel is in old port','AD1001'), 
+VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'McGill University','Touristic Attraction',
+'Historical tour about the life of McGill, and his contribution to the university.','AD1004'), 
+VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'Murals, and shops of Plateu,','Artistic Attraction','Murals in Plateu','AD1001'), 
+VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'Montreal Fine Art Museum','Touristic Attraction','Montreal Museum of fine Art','AD1003'), 
+VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'Mont Royal Park','Nature Touristic Attraction','Mont Royal park','AD1002');
 
 
 /*TourVenue*/
 
 INSERT INTO TourVenue
-VALUES (CONCAT('VN',NEXT VALUE FOR tourVenueID_next), 'Someone', '1234-5678')
+VALUES (CONCAT('VN',NEXT VALUE FOR tourVenueID_next), 'VN1001', 'TR1004'),
+VALUES (CONCAT('VN',NEXT VALUE FOR tourVenueID_next), 'VN1002', 'TR1001'),
+VALUES (CONCAT('VN',NEXT VALUE FOR tourVenueID_next), 'VN1003', 'TR1002'),
+VALUES (CONCAT('VN',NEXT VALUE FOR tourVenueID_next), 'VN1004', 'TR1005'),
+VALUES (CONCAT('VN',NEXT VALUE FOR tourVenueID_next), 'VN1005', 'TR1003'),
+
 
 /*Trip*/
 INSERT INTO Trip 
