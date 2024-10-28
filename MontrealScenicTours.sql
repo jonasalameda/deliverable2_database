@@ -197,13 +197,20 @@ VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Acadie Tour', 75, 29.99);
 
 /*Qualification*/
 INSERT INTO Qualification
-VALUES(CONCAT('QU',NEXT VALUE FOR qualID_next),
-
-/*--tourID, guideID*/, 1, '01-01-2024')
+VALUES(CONCAT('QU',NEXT VALUE FOR qualID_next),'TR1003', 'GD1001', 1, '01-01-2015'),
+VALUES(CONCAT('QU',NEXT VALUE FOR qualID_next),'TR1005', 'GD1002', 1, '20-11-2016'),
+VALUES(CONCAT('QU',NEXT VALUE FOR qualID_next),'TR1004', 'GD1004', 1, '13-09-2014'),
+VALUES(CONCAT('QU',NEXT VALUE FOR qualID_next),'TR1001', 'GD1005', 1, '18-08-2019'),
+VALUES(CONCAT('QU',NEXT VALUE FOR qualID_next),'TR1002', 'GD1003', 1, '26-03-2012');
 
 /*Venue*/
 INSERT INTO Venue
-VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next), 
+VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'La Roue de Mtl','Touristic Attraction','Montreal wheel is in old port','AD1005'), 
+VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'La Roue de Mtl','Touristic Attraction','Montreal wheel is in old port','AD1003'), 
+VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'La Roue de Mtl','Touristic Attraction','Montreal wheel is in old port','AD1002'), 
+VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'La Roue de Mtl','Touristic Attraction','Montreal wheel is in old port','AD1004'), 
+VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'La Roue de Mtl','Touristic Attraction','Montreal wheel is in old port','AD1001'), 
+
 
 /*TourVenue*/
 
