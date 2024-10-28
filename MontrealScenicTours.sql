@@ -43,7 +43,7 @@ CREATE TABLE Qualification (
 );
 
 CREATE TABLE Venue (
-	Ven_ID CHAR (6) CONSTRAINT Venue_Loc_ID_PK PRIMARY KEY (Ven_ID),
+	Ven_ID CHAR (6) CONSTRAINT Venue_Ven_ID_PK PRIMARY KEY (Ven_ID),
 	Ven_Name VARCHAR(64) CONSTRAINT Venue_Ven_Name_UK NOT NULL,
 	Ven_Type VARCHAR(32),
 	Ven_Desc VARCHAR(64),
@@ -55,7 +55,7 @@ CREATE TABLE TourVenue (
 	Ven_ID CHAR (6) CONSTRAINT TourVenue_Ven_ID_FK FOREIGN KEY (Ven_ID) REFERENCES Venue(Ven_ID),
 	Tour_ID CHAR(6) CONSTRAINT TourVenue_Tour_ID_FK FOREIGN KEY (Tour_ID) REFERENCES Tour(Tour_ID),
 	PRIMARY KEY (Ven_ID, Tour_ID)
-)
+);
 
 CREATE TABLE Trip (
 	Trip_ID CHAR(6) CONSTRAINT Trip_Trip_ID_PK PRIMARY KEY (Trip_ID),
@@ -188,7 +188,12 @@ VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Minwan Kim', '514-119-8678'
 
 /*Tour*/
 INSERT INTO Tour 
-VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Someone', '1234-5678')
+VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Downtown Tour', 80, 34.99),
+VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Plateu Tour', 105, 63.99),
+VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Old Port Tour', 135, 49.99),
+VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'WestMount Tour', 75, 54.99),
+VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Acadie Tour', 75, 29.99);
+
 
 /*Qualification*/
 INSERT INTO Qualification
