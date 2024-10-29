@@ -9,6 +9,15 @@ CREATE TABLE Place (
 	Place_Postal CHAR(7) 
 );
 
+CREATE TABLE Venue (
+	Ven_ID CHAR (6) CONSTRAINT Venue_Ven_ID_PK PRIMARY KEY (Ven_ID),
+	Ven_Name VARCHAR(64) CONSTRAINT Venue_Ven_Name_UK NOT NULL,
+	Ven_Type VARCHAR(32),
+	Ven_Desc VARCHAR(64),
+	Ven_Idx INT IDENTITY (100000, 1),
+	Place_ID CHAR(6) CONSTRAINT Venue_Place_ID_FK FOREIGN KEY (Place_ID) REFERENCES Place(Place_ID)
+);
+
 CREATE TABLE Guide (
 	Guide_ID CHAR(6) CONSTRAINT Guide_Guide_ID_PK PRIMARY KEY (Guide_ID),
 	Guide_Name VARCHAR(32) NOT NULL,
@@ -31,7 +40,7 @@ CREATE TABLE Tour (
 	Tour_Name VARCHAR(32) CONSTRAINT Tour_Tour_Name_NN NOT NULL,
 	Tour_Dur INT,
 	Tour_Fee MONEY,
-	Tour_Order INT IDENTITY (100000, 1),
+	Tour_Order VARCHAR(64)
 );
 
 CREATE TABLE Qualification (
@@ -42,14 +51,6 @@ CREATE TABLE Qualification (
 	PRIMARY KEY (Guide_ID, Tour_ID)
 );
 
-CREATE TABLE Venue (
-	Ven_ID CHAR (6) CONSTRAINT Venue_Ven_ID_PK PRIMARY KEY (Ven_ID),
-	Ven_Name VARCHAR(64) CONSTRAINT Venue_Ven_Name_UK NOT NULL,
-	Ven_Type VARCHAR(32),
-	Ven_Desc VARCHAR(64),
-	Ven_Idx INT IDENTITY (100000, 1),
-	Place_ID CHAR(6) CONSTRAINT Venue_Place_ID_FK FOREIGN KEY (Place_ID) REFERENCES Place(Place_ID)
-);
 
 CREATE TABLE TourVenue (
 	Ven_ID CHAR (6) CONSTRAINT TourVenue_Ven_ID_FK FOREIGN KEY (Ven_ID) REFERENCES Venue(Ven_ID),
@@ -81,7 +82,7 @@ ADD CONSTRAINT Tour_name_UK UNIQUE (Tour_name);
 ALTER TABLE Venue
 ADD CONSTRAINT Ven_name_UK UNIQUE (Ven_name);
 
-CREATE SEQUENCE placeID_next --maybe 
+CREATE SEQUENCE placeID_next 
 START WITH 1001
 INCREMENT BY 1
 MINVALUE 1001
@@ -90,7 +91,7 @@ NO CYCLE
 NO CACHE;
 
 
-CREATE SEQUENCE guideID_next --maybe 
+CREATE SEQUENCE guideID_next  
 START WITH 1001
 INCREMENT BY 1
 MINVALUE 1001
@@ -99,7 +100,7 @@ NO CYCLE
 NO CACHE;
 
 
-CREATE SEQUENCE touristID_next --maybe 
+CREATE SEQUENCE touristID_next 
 START WITH 1001
 INCREMENT BY 1
 MINVALUE 1001
@@ -107,22 +108,13 @@ MAXVALUE 9999
 NO CYCLE 
 NO CACHE;
 
-CREATE SEQUENCE tourID_next --maybe 
+CREATE SEQUENCE tourID_next 
 START WITH 1001
 INCREMENT BY 1
 MINVALUE 1001
 MAXVALUE 9999
 NO CYCLE 
 NO CACHE;
-
-CREATE SEQUENCE qualID_next --maybe 
-START WITH 1001
-INCREMENT BY 1
-MINVALUE 1001
-MAXVALUE 9999
-NO CYCLE 
-NO CACHE;
-
 
 CREATE SEQUENCE tripID_next 
 START WITH 1001
@@ -132,7 +124,7 @@ MAXVALUE 9999
 NO CYCLE 
 NO CACHE;
 
-CREATE SEQUENCE venueID_next --maybe 
+CREATE SEQUENCE venueID_next 
 START WITH 1001
 INCREMENT BY 1
 MINVALUE 1001
@@ -140,7 +132,7 @@ MAXVALUE 9999
 NO CYCLE 
 NO CACHE;
 
-CREATE SEQUENCE tourVenueID_next --maybe 
+CREATE SEQUENCE tourVenueID_next 
 START WITH 1001
 INCREMENT BY 1
 MINVALUE 1001
@@ -148,7 +140,7 @@ MAXVALUE 9999
 NO CYCLE 
 NO CACHE;
 
-CREATE SEQUENCE tripID_next --maybe 
+CREATE SEQUENCE tripID_next 
 START WITH 1001
 INCREMENT BY 1
 MINVALUE 1001
@@ -156,7 +148,7 @@ MAXVALUE 9999
 NO CYCLE 
 NO CACHE;
 
-CREATE SEQUENCE visitID_next --maybe 
+CREATE SEQUENCE visitID_next 
 START WITH 1001
 INCREMENT BY 1
 MINVALUE 1001
@@ -167,80 +159,88 @@ NO CACHE;
 
 
 /*Place*/
-INSERT INTO Place 
-VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),1234,'Lemieux Avenue', 'Montreal', 'H8N 2B6'),
-VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),5647,'Tardif Street', 'Montreal', 'H7L 3C9'),
-VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),9634,'Kennedy Street', 'Montreal', 'H8R 4R7'),
-VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),8820,'Maisonneuve Boulevard', 'Montreal', 'H2C 2V4'),
-VALUES (CONCAT('AD',NEXT VALUE FOR placeID_next),8133,'Original Street', 'Montreal', 'H9N 3B6');
+INSERT INTO Place (Place_ID, Place_Stno, Place_Stname, Place_City, Place_Postal) VALUES 
+	(CONCAT('AD',NEXT VALUE FOR placeID_next),1234,'Lemieux Avenue', 'Montreal', 'H8N 2B6'),
+	(CONCAT('AD',NEXT VALUE FOR placeID_next),5647,'Tardif Street', 'Montreal', 'H7L 3C9'),
+	(CONCAT('AD',NEXT VALUE FOR placeID_next),9634,'Kennedy Street', 'Montreal', 'H8R 4R7'),
+	(CONCAT('AD',NEXT VALUE FOR placeID_next),8820,'Maisonneuve Boulevard', 'Montreal', 'H2C 2V4'),
+	(CONCAT('AD',NEXT VALUE FOR placeID_next),8133,'Original Street', 'Montreal', 'H9N 3B6');
 
+/*Venue*/
+INSERT INTO Venue (Ven_ID, Ven_Name, Ven_Type, Ven_Desc, Place_ID) VALUES
+	(CONCAT('VN',NEXT VALUE FOR venueID_next),'La Roue de Mtl','Cultural','Montreal wheel is in old port','AD1005'), 
+	(CONCAT('VN',NEXT VALUE FOR venueID_next),'McGill University','Historical','tour about the life of McGill & contribution to the university.','AD1004'), 
+	(CONCAT('VN',NEXT VALUE FOR venueID_next),'Murals, and shops of Plateu,','Leisure','Murals in Plateu','AD1001'), 
+	(CONCAT('VN',NEXT VALUE FOR venueID_next),'Montreal Fine Art Museum','Cultural','Montreal Museum of fine Art','AD1003'), 
+	(CONCAT('VN',NEXT VALUE FOR venueID_next),'Mont Royal Park','Nature','Mont Royal park','AD1002');
+	
 
 /*Guides*/
-INSERT INTO Guide
-VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'John Smith', '10-09-2006', '514-567-8910', NULL, 'AD1002'), 
-VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'Jane Austen', '23-02-2009', '514-527-8022', 'janeAusten@gmail.com', 'AD1005'), 
-VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'Linda Nordstrom', '21-04-2014', '514-522-4858', 'nordstromLinda@gmail.com', 'AD1003'), 
-VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'Kevin Hart', '30-09-2015', '514-986-3214', 'hartK@gmail.com', 'AD1001'), 
-VALUES (CONCAT('GD',NEXT VALUE FOR guideID_next),'Andrea Balazar', '23-11-2015', '514-963-4466', 'andreaB@gmail.com', 'AD1004'); 
+INSERT INTO Guide (Guide_ID, Guide_Name, Guide_DOH, Guide_PHONE, Guide_EMAIL, Place_ID) VALUES
+	(CONCAT('GD',NEXT VALUE FOR guideID_next),'John Smith', '2006-09-10', '514-567-8910', NULL, 'AD1002'), 
+	(CONCAT('GD',NEXT VALUE FOR guideID_next),'Jane Austen', '2009-02-23', '514-527-8022', 'janeAusten@gmail.com', 'AD1005'), 
+	(CONCAT('GD',NEXT VALUE FOR guideID_next),'Linda Nordstrom', '2014-04-21', '514-522-4858', 'nordstromLinda@gmail.com', 'AD1003'), 
+	(CONCAT('GD',NEXT VALUE FOR guideID_next),'Kevin Hart', '2015-09-30', '514-986-3214', 'hartK@gmail.com', 'AD1001'), 
+	(CONCAT('GD',NEXT VALUE FOR guideID_next),'Andrea Balazar', '2015-11-23', '514-963-4466', 'andreaB@gmail.com', 'AD1004'); 
 
 
 /*Tourist*/
-INSERT INTO Tourist 
-VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Beyonce Carter', '514-123-5678', 'carterB@gmail.com', 'AD1003'),
-VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Justin Power', '514-447-9664', 'PowerJ@gmail.com', 'AD1001'),
-VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Penelope Garcia', '514-331-6998', 'PenelopeG@gmail.com', 'AD1004'),
-VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Janine Teagues', '514-323-2323', NULL, 'AD1005'),
-VALUES (CONCAT('TS',NEXT VALUE FOR touristID_next), 'Minwan Kim', '514-119-8678', 'minwanKim@gmail.com', 'AD1002');
+INSERT INTO Tourist (Tourist_ID, Tourist_Name, Tourist_Phone, Tourist_Email, Place_ID) VALUES
+	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Beyonce Carter', '514-123-5678', 'carterB@gmail.com', 'AD1003'),
+	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Justin Power', '514-447-9664', 'PowerJ@gmail.com', 'AD1001'),
+	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Penelope Garcia', '514-331-6998', 'PenelopeG@gmail.com', 'AD1004'),
+	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Janine Teagues', '514-323-2323', NULL, 'AD1005'),
+	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Minwan Kim', '514-119-8678', 'minwanKim@gmail.com', 'AD1002');
 
 /*Tour*/
-INSERT INTO Tour 
-VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Downtown Tour', 80, 34.99),
-VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Plateu Tour', 105, 63.99),
-VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Mont Royal Tour', 75, 29.99),
-VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'Old Port Tour', 135, 49.99),
-VALUES (CONCAT('TR',NEXT VALUE FOR tourID_next), 'WestMount Tour', 75, 54.99);
-
+INSERT INTO Tour (Tour_ID, Tour_Name, Tour_Dur, Tour_Fee, Tour_Order) VALUES
+	(CONCAT('TR',NEXT VALUE FOR tourID_next), 'Downtown Tour', 1, 25.00, 'VN1006 VN1004'),
+	(CONCAT('TR',NEXT VALUE FOR tourID_next), 'Plateu Tour', 3, 50.00, 'VN1005'),
+	(CONCAT('TR',NEXT VALUE FOR tourID_next), 'Mont Royal Tour', 2, 30.00, 'VN1007'),
+	(CONCAT('TR',NEXT VALUE FOR tourID_next), 'Old Port Tour', 1, 50.00, 'VN1003 VN1003'),
+	(CONCAT('TR',NEXT VALUE FOR tourID_next), 'WestMount Tour', 2, 10.00, 'VN1004');
 
 /*Qualification*/
-INSERT INTO Qualification
-VALUES(CONCAT('QU',NEXT VALUE FOR qualID_next),'TR1003', 'GD1001', 1, '01-01-2015'),
-VALUES(CONCAT('QU',NEXT VALUE FOR qualID_next),'TR1005', 'GD1002', 1, '20-11-2016'),
-VALUES(CONCAT('QU',NEXT VALUE FOR qualID_next),'TR1004', 'GD1004', 1, '13-09-2014'),
-VALUES(CONCAT('QU',NEXT VALUE FOR qualID_next),'TR1001', 'GD1005', 1, '18-08-2019'),
-VALUES(CONCAT('QU',NEXT VALUE FOR qualID_next),'TR1002', 'GD1003', 1, '26-03-2012');
-
-/*Venue*/
-INSERT INTO Venue
-VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'La Roue de Mtl','Touristic Attraction','Montreal wheel is in old port','AD1005'), 
-VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'McGill University','Touristic Attraction',
-'Historical tour about the life of McGill, and his contribution to the university.','AD1004'), 
-VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'Murals, and shops of Plateu,','Artistic Attraction','Murals in Plateu','AD1001'), 
-VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'Montreal Fine Art Museum','Touristic Attraction','Montreal Museum of fine Art','AD1003'), 
-VALUES(CONCAT('VN',NEXT VALUE FOR veneuID_next),'Mont Royal Park','Nature Touristic Attraction','Mont Royal park','AD1002');
-
+INSERT INTO Qualification (Guide_ID, Tour_ID, Qual_Is_Rqd, Qual_Date) VALUES
+	('GD1001', 'TR1003', 1, '2015-01-01'),
+	('GD1002', 'TR1005', 1, '2016-11-20'),
+	('GD1003', 'TR1004', 1, '2014-09-13'),
+	('GD1004', 'TR1001', 1, '2019-08-18'),
+	('GD1005', 'TR1002', 1, '2012-03-26');
 
 /*TourVenue*/
 
-INSERT INTO TourVenue
-VALUES (CONCAT('TV',NEXT VALUE FOR tourVenueID_next), 'VN1001', 'TR1004'),
-VALUES (CONCAT('TV',NEXT VALUE FOR tourVenueID_next), 'VN1002', 'TR1001'),
-VALUES (CONCAT('TV',NEXT VALUE FOR tourVenueID_next), 'VN1003', 'TR1002'),
-VALUES (CONCAT('TV',NEXT VALUE FOR tourVenueID_next), 'VN1004', 'TR1005'),
-VALUES (CONCAT('TV',NEXT VALUE FOR tourVenueID_next), 'VN1005', 'TR1003');
+INSERT INTO TourVenue (Ven_ID, Tour_ID) VALUES
+	('VN1001', 'TR1004'),
+	('VN1002', 'TR1001'),
+	('VN1003', 'TR1002'),
+	('VN1004', 'TR1005'),
+	('VN1005', 'TR1003');
 
 
 /*Trip*/
-INSERT INTO Trip 
-VALUES (CONCAT('TP',NEXT VALUE FOR tripID_next), 10:30:00, 'TR1003', 'GD1001'),
-VALUES (CONCAT('TP',NEXT VALUE FOR tripID_next), 08:45:00, 'TR1004', 'GD1004'),
-VALUES (CONCAT('TP',NEXT VALUE FOR tripID_next), 12:00:00, 'TR1002', 'GD1003'),
-VALUES (CONCAT('TP',NEXT VALUE FOR tripID_next), 10:00:00, 'TR1005', 'GD1002'),
-VALUES (CONCAT('TP',NEXT VALUE FOR tripID_next), 11:15:00, 'TR1001', 'GD1005');
+INSERT INTO Trip (Trip_ID, Trip_Start, Tour_ID, Guide_ID) VALUES
+	(CONCAT('TP',NEXT VALUE FOR tripID_next), '10:30:00', 'TR1003', 'GD1001'),
+	(CONCAT('TP',NEXT VALUE FOR tripID_next), '08:45:00', 'TR1004', 'GD1004'),
+	(CONCAT('TP',NEXT VALUE FOR tripID_next), '12:00:00', 'TR1002', 'GD1003'),
+	(CONCAT('TP',NEXT VALUE FOR tripID_next), '10:00:00', 'TR1005', 'GD1002'),
+	(CONCAT('TP',NEXT VALUE FOR tripID_next), '11:15:00', 'TR1001', 'GD1005');
 
 
 /*Visit*/
-INSERT INTO Visit VALUES(CONCAT('VS', NEXT VALUE FOR visitID_next), 'TP1001', 'TS1003');
-INSERT INTO Visit VALUES(CONCAT('VS', NEXT VALUE FOR visitID_next), 'TP1002', 'TS1005'); 
-INSERT INTO Visit VALUES(CONCAT('VS', NEXT VALUE FOR visitID_next), 'TP1003', 'TS1001'); 
-INSERT INTO Visit VALUES(CONCAT('VS', NEXT VALUE FOR visitID_next), 'TP1004', 'TS1002'); 
-INSERT INTO Visit VALUES(CONCAT('VS', NEXT VALUE FOR visitID_next), 'TP1005', 'TS1004');
+INSERT INTO Visit (Trip_ID, Tourist_ID) VALUES 
+	('TP1001', 'TS1003'),
+	('TP1002', 'TS1005'), 
+	('TP1003', 'TS1001'), 
+	('TP1004', 'TS1002'), 
+	('TP1005', 'TS1004');
+
+SELECT * FROM GUIDE;
+SELECT * FROM PLACE;
+SELECT * FROM Qualification;
+SELECT * FROM Tour;
+SELECT * FROM Tourist;
+SELECT * FROM TourVenue;
+SELECT * FROM Trip;
+SELECT * FROM Venue;
+SELECT * FROM Visit;
