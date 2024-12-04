@@ -240,14 +240,20 @@ INSERT INTO Visit (Trip_ID, Tourist_ID) VALUES
 
 
 --views
+--VIew to see the details of reservations made in the visit table like who made them, where, and who is givivng them
 CREATE VIEW visit_Reservation_User AS
-SELECT Tourist_Name, Tourist_Phone, Tour_Name, Ven_Name, Trip_Start
+SELECT Tourist_Name, Tourist_Phone, Tour_Name, Ven_Name, Trip_Start, Tour_Fee, Guide_Name
 FROM TOURIST ts JOIN VISIT vs ON ts.Tourist_ID = vs.Tourist_ID
 				JOIN TRIP tr ON vs.Trip_ID = tr.TripID
-				JOIN TOUR tour = tour.Tour_ID = tr.Tour_ID
+				JOIN TOUR tour ON tour.Tour_ID = tr.Tour_ID
+				JOIN GUIDE g ON tr.Guide_NAME = g.Guide_Name
 ORDER BY Trip_Start ASC;
 
-CREATE VIEW ///////////////////
+--just a little view that displays the tours by lowest price to largest
+CREATE VIEW order_Tours_By_Price_Ascending AS
+SELECT  Tour_Name, Tour_Dur, Tour_Fee FROM TOUR
+ORDER BY Tour_Fee;
+
 
 
 ////////////////////////
@@ -278,8 +284,25 @@ BEGIN
 		THROW
 		print'Oops something must have gone wrong please be patient'
 	End CATCH
-END
+END;
 
+--Stored procedure to cancel a reservation , but with condition that you cancel at least 4 hours before or ot will not allow you to cancel
+CREATE PROCEDURE cancelReservation(@trip CHAR(6), @touristID CHAR(6))
+AS
+BEGIN
+DECLARE @startTime = (SELECT trip_Start from TRIP where Trip_Id = @trip);
+declare @timeDifference = TIMEDIFF(@startTime, (SELECT TIME(NOW()));
+IF(@timedifference <= 4)
+	begin
+		print'sorry you cannot cancel this reservation as the limit for cancellation is 4 hours ahead'
+	end
+ELSE
+	begin 
+	 DELETE from VISIT WHERE Trip_ID = @trip AND Touris_ID = @touristID;
+	 print 'your reservation was successfully cancelled'
+	end
+END;
+--iteneraire, price venues, hours, guide
 
 SELECT * FROM GUIDE;
 SELECT * FROM PLACE;
