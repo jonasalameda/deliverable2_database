@@ -32,7 +32,7 @@ CREATE TABLE Tourist(
 	Tourist_Name VARCHAR(32) NOT NULL,
 	Tourist_Phone VARCHAR(12) NOT NULL,
 	Tourist_Email VARCHAR(50),
-	Place_ID CHAR(6) CONSTRAINT Tourist_Place_ID_FK FOREIGN KEY (Place_ID) REFERENCES Place(Place_ID)
+	Ven_ID CHAR(6) CONSTRAINT Tourist_Ven_ID_FK FOREIGN KEY (Ven_ID) REFERENCES Venue(Ven_ID)
 );
 
 CREATE TABLE Tour (
@@ -185,12 +185,12 @@ INSERT INTO Guide (Guide_ID, Guide_Name, Guide_DOH, Guide_PHONE, Guide_EMAIL, Pl
 
 
 /*Tourist*/
-INSERT INTO Tourist (Tourist_ID, Tourist_Name, Tourist_Phone, Tourist_Email, Place_ID) VALUES
-	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Beyonce Carter', '514-123-5678', 'carterB@gmail.com', 'AD1003'),
-	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Justin Power', '514-447-9664', 'PowerJ@gmail.com', 'AD1001'),
-	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Penelope Garcia', '514-331-6998', 'PenelopeG@gmail.com', 'AD1004'),
-	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Janine Teagues', '514-323-2323', NULL, 'AD1005'),
-	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Minwan Kim', '514-119-8678', 'minwanKim@gmail.com', 'AD1002');
+INSERT INTO Tourist (Tourist_ID, Tourist_Name, Tourist_Phone, Tourist_Email, Ven_ID) VALUES
+	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Beyonce Carter', '514-123-5678', 'carterB@gmail.com', 'VN1003'),
+	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Justin Power', '514-447-9664', 'PowerJ@gmail.com', 'VN1001'),
+	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Penelope Garcia', '514-331-6998', 'PenelopeG@gmail.com', 'VN1004'),
+	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Janine Teagues', '514-323-2323', NULL, 'VN1005'),
+	(CONCAT('TS',NEXT VALUE FOR touristID_next), 'Minwan Kim', '514-119-8678', 'minwanKim@gmail.com', 'VN1002');
 
 /*Tour*/
 INSERT INTO Tour (Tour_ID, Tour_Name, Tour_Dur, Tour_Fee, Tour_Order) VALUES
@@ -241,9 +241,10 @@ INSERT INTO Visit (Trip_ID, Tourist_ID) VALUES
 CREATE VIEW visit_Reservation_User AS
 SELECT Tourist_Name, Tourist_Phone, Tour_Name, Ven_Name, Trip_Start, Tour_Fee, Guide_Name
 FROM TOURIST ts JOIN VISIT vs ON ts.Tourist_ID = vs.Tourist_ID
-				JOIN TRIP tr ON vs.Trip_ID = tr.TripID
+				JOIN TRIP tr ON vs.Trip_ID = tr.Trip_ID
 				JOIN TOUR tour ON tour.Tour_ID = tr.Tour_ID
-				JOIN GUIDE g ON tr.Guide_NAME = g.Guide_Name
+				JOIN GUIDE g ON tr.Guide_ID = g.Guide_Name
+				JOIN Venue v ON ts.Ven_ID = v.Ven_ID;
 ORDER BY Trip_Start ASC;
 
 --just a little view that displays the tours by lowest price to largest
