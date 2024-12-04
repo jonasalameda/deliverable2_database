@@ -173,6 +173,9 @@ INSERT INTO Venue (Ven_ID, Ven_Name, Ven_Type, Ven_Desc, Place_ID) VALUES
 	(CONCAT('VN',NEXT VALUE FOR venueID_next),'Murals, and shops of Plateu,','Leisure','Murals in Plateu','AD1001'), 
 	(CONCAT('VN',NEXT VALUE FOR venueID_next),'Montreal Fine Art Museum','Cultural','Montreal Museum of fine Art','AD1003'), 
 	(CONCAT('VN',NEXT VALUE FOR venueID_next),'Mont Royal Park','Nature','Mont Royal park','AD1002');
+	(CONCAT('VN',NEXT VALUE FOR venueID_next),'Mont Royal Park','Nature','Mont Royal park','AD1002');
+	(CONCAT('VN',NEXT VALUE FOR venueID_next),'Mont Royal Park','Nature','Mont Royal park','AD1002');
+
 	
 
 /*Guides*/
@@ -234,6 +237,49 @@ INSERT INTO Visit (Trip_ID, Tourist_ID) VALUES
 	('TP1003', 'TS1001'), 
 	('TP1004', 'TS1002'), 
 	('TP1005', 'TS1004');
+
+
+--views
+CREATE VIEW visit_Reservation_User AS
+SELECT Tourist_Name, Tourist_Phone, Tour_Name, Ven_Name, Trip_Start
+FROM TOURIST ts JOIN VISIT vs ON ts.Tourist_ID = vs.Tourist_ID
+				JOIN TRIP tr ON vs.Trip_ID = tr.TripID
+				JOIN TOUR tour = tour.Tour_ID = tr.Tour_ID
+ORDER BY Trip_Start ASC;
+
+CREATE VIEW ///////////////////
+
+
+////////////////////////
+
+--stored procedure
+go
+CREATE PROCEDURE join_randomTrip(@touristId CHAR(6))
+AS
+BEGIN
+	DECLARE @randomTripID CHAR(6) = (SELECT TOP 1 * FROM your_table
+									ORDER BY NEWID());
+
+	Begin try
+		IF EXISTS(SELECT * FROM VISIT WHERE Trip_ID = @randomTrip AND Tourist_ID = @tourist)
+		begin
+			print 'It seems you have already completed and hopefully enjoyed this tour!'
+		end
+
+		ELSE
+		begin
+			INSERT INTO VISIT VALUES(@tourist, @randomTripID)
+			DECLARE @TripInfo VARCHAR(100) = (SELECT Tour_Name FROM TRIP JOIN TOUR ON trip.Tour_ID = tour.Tour_ID
+												WHERE Trip_ID = @randomTripID)
+			print CONCAT('You have been assigned to ', @TripInfo, ', we hope you enjoy your tour :)'
+		end
+	End try
+	BEGIN CATCH
+		THROW
+		print'Oops something must have gone wrong please be patient'
+	End CATCH
+END
+
 
 SELECT * FROM GUIDE;
 SELECT * FROM PLACE;
