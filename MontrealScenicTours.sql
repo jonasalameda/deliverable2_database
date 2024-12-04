@@ -173,9 +173,6 @@ INSERT INTO Venue (Ven_ID, Ven_Name, Ven_Type, Ven_Desc, Place_ID) VALUES
 	(CONCAT('VN',NEXT VALUE FOR venueID_next),'Murals, and shops of Plateu,','Leisure','Murals in Plateu','AD1001'), 
 	(CONCAT('VN',NEXT VALUE FOR venueID_next),'Montreal Fine Art Museum','Cultural','Montreal Museum of fine Art','AD1003'), 
 	(CONCAT('VN',NEXT VALUE FOR venueID_next),'Mont Royal Park','Nature','Mont Royal park','AD1002');
-	(CONCAT('VN',NEXT VALUE FOR venueID_next),'Mont Royal Park','Nature','Mont Royal park','AD1002');
-	(CONCAT('VN',NEXT VALUE FOR venueID_next),'Mont Royal Park','Nature','Mont Royal park','AD1002');
-
 	
 
 /*Guides*/
