@@ -268,13 +268,10 @@ SET Ven_ID = 'VN1001' WHERE Tour_ID = 'TR1004';
 UPDATE TOUR
 SET Ven_ID = 'VN1004' WHERE Tour_ID = 'TR1005';
 
-<<<<<<< HEAD
 --VIew to see the details of reservations made in the visit table like who made them, where, and who is givivng them
 CREATE VIEW visit_Reservation_User AS
-=======
 -- View to see the details of reservations made in the visit table like who made them, where, and who is givivng them
 ALTER VIEW visit_Reservation_User AS
->>>>>>> ac35e5d705a435a2ab5f4a0b8c9c3c291bb390cd
 SELECT Tourist_Name, Tourist_Phone, Tour_Name, Trip_Start, Tour_Fee, Guide_Name, Ven_name
 FROM TOURIST ts 
 JOIN VISIT vs ON ts.Tourist_ID = vs.Tourist_ID				
@@ -285,20 +282,19 @@ JOIN Venue ven ON ven.Ven_ID = tour.Ven_ID;
 
 select * from visit_Reservation_User --empty table
 
-<<<<<<< HEAD
 --just a little view that displays the tours by lowest price to largest
 ALTER VIEW order_Tours_and_Venues AS
 SELECT  Tour_Name, Tour_Fee, Ven_Name as 'Location visited', Place_Stname as Adress FROM TOUR t
 JOIN Venue v ON v.Ven_ID = t.Ven_ID
 JOIN PLACE p ON p.Place_ID = v.Place_ID
 --ORDER BY Tour_Fee;
-=======
+
+
 -- just a little view that displays the tours by lowest price to largest
 CREATE VIEW order_Tours_and_Venues AS
 SELECT  Tour_Name, Tour_Dur, Tour_Fee, Ven_Name as 'Location visited' FROM TOUR t
 JOIN Venue v ON v.Ven_ID = t.Ven_ID;
 ;
->>>>>>> ac35e5d705a435a2ab5f4a0b8c9c3c291bb390cd
 
 
 -- Triggers:
@@ -345,14 +341,14 @@ select * from order_Tours_and_Venues
 SELECT * FROM Qualification;
 SELECT * FROM Trip;
 
-<<<<<<< HEAD
+
 select * from Venue
 select * from Place
 
 --stored procedure
 INSERT INTO Visit VALUES ('TP1001', 'TS1005')
 
-=======
+
   
 --FIRING THE TRIGGER WITH VALID QUAL
 INSERT INTO Trip (Trip_ID, Trip_Start, Tour_ID, Guide_ID)
@@ -376,7 +372,6 @@ CREATE ROLE System_Admin AUTHORIZATION db_owner
 
 
 -- stored procedure
->>>>>>> ac35e5d705a435a2ab5f4a0b8c9c3c291bb390cd
 go
 CREATE PROCEDURE join_Random_Trip (@touristID CHAR(6))
 AS
@@ -411,39 +406,7 @@ BEGIN
     RAISERROR (@ErrorMessage,@ErrorSeverity,@ErrorState);
 	End Catch;
 END;
-
-/*CREATE PROCEDURE join_randomTrip(@touristId CHAR(6))
-AS
-BEGIN
-	DECLARE @randomTripID CHAR(6) = (SELECT TOP 1 * FROM Trip ORDER BY NEWID())
-
-	Begin try
-		IF EXISTS (SELECT 1 FROM Visit WHERE (Trip_ID = @randomTripID AND @touristId = Tourist_ID))
-		begin
-			print 'It seems you have already completed and hopefully enjoyed this tour!'
-		end
-
-		ELSE
-		begin
-			INSERT INTO VISIT VALUES(@touristId, @randomTripID)
-			DECLARE @TripInfo VARCHAR(100) = (SELECT TOP 1 Tour_Name --ensures only 1 value is assigned
-											FROM TRIP 
-											JOIN TOUR ON trip.Tour_ID = tour.Tour_ID
-											WHERE Trip_ID = @randomTripID)
-			print CONCAT('You have been assigned to ', @TripInfo, ', we hope you enjoy your tour :)');
-		end
-	End try
-	BEGIN CATCH
-		THROW
-		print'Oops something must have gone wrong please be patient'
-	End CATCH
-<<<<<<< HEAD
-END;*/
-=======
-END;
->>>>>>> ac35e5d705a435a2ab5f4a0b8c9c3c291bb390cd
-
-
+ 
 ALTER TABLE TRIP
 	DROP COLUMN Trip_Start; 
 
@@ -511,7 +474,6 @@ END;
 EXec cancelReservation 'TP1001', 'TS1003'
 --iteneraire, price venues, hours, guide
 
-<<<<<<< HEAD
 SELECT * FROM GUIDE;
 SELECT * FROM PLACE;
 SELECT * FROM Qualification;
@@ -525,5 +487,3 @@ SELECT * FROM Visit;
 
 SELECT * FROM visit_Reservation_User
 select * from order_Tours_and_Venues
-=======
->>>>>>> ac35e5d705a435a2ab5f4a0b8c9c3c291bb390cd
