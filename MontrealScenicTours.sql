@@ -1,17 +1,6 @@
 CREATE DATABASE MontrealScenicTours
 USE MontrealScenicTours
 
--- role for data reading
-CREATE ROLE Customer_Service AUTHORIZATION db_datareader
--- role for data writing
-CREATE ROLE Tour_Manager AUTHORIZATION db_datawriter
--- role for admin, it administrates the employers
-CREATE ROLE Administrator AUTHORIZATION db_accessadmin
--- role for the backup people
-CREATE ROLE Backup_Management AUTHORIZATION db_backupoperator
--- sys admin
-CREATE ROLE System_Admin AUTHORIZATION db_owner
-
 CREATE TABLE Place (
 	Place_ID CHAR(6) CONSTRAINT Place_Place_ID_PK PRIMARY KEY (Place_ID),
 	Place_Stno INT,
@@ -151,14 +140,6 @@ MAXVALUE 9999
 NO CYCLE 
 NO CACHE;
 
-/*CREATE SEQUENCE tripID_next 
-START WITH 1001
-INCREMENT BY 1
-MINVALUE 1001
-MAXVALUE 9999
-NO CYCLE 
-NO CACHE;repeated*/ 
-
 CREATE SEQUENCE visitID_next 
 START WITH 1001
 INCREMENT BY 1
@@ -279,8 +260,7 @@ SET Ven_ID = 'VN1001' WHERE Tour_ID = 'TR1004';
 UPDATE TOUR
 SET Ven_ID = 'VN1004' WHERE Tour_ID = 'TR1005';
 
---VIew to see the details of reservations made in the visit table like who made them, where, and who is givivng them
-CREATE VIEW visit_Reservation_User AS
+
 -- View to see the details of reservations made in the visit table like who made them, where, and who is givivng them
 ALTER VIEW visit_Reservation_User AS
 SELECT Tourist_Name, Tourist_Phone, Tour_Name, Trip_Start, Tour_Fee, Guide_Name, Ven_name
@@ -380,6 +360,21 @@ CREATE ROLE Administrator AUTHORIZATION db_accessadmin
 CREATE ROLE Backup_Management AUTHORIZATION db_backupoperator
 -- sys admin.
 CREATE ROLE System_Admin AUTHORIZATION db_owner
+
+CREATE LOGIN selihom WITH PASSWORD = 'VErYstROng#$^1'
+CREATE LOGIN majeed WITH PASSWORD = 'suPerSTRonk@310'
+CREATE LOGIN sabrina WITH PASSWORD = 'bIGpassWORd@10'
+CREATE LOGIN sysadmin WITH PASSWORD = 'password'
+
+CREATE USER Selihom FOR LOGIN selihom
+CREATE USER Majeed FOR LOGIN majeed
+CREATE USER Sabrina FOR LOGIN sabrina
+CREATE USER Jonas FOR LOGIN sysadmin
+
+GRANT SELECT, EXECUTE ON DATABASE::MontrealScenicTours TO Selihom 
+GRANT INSERT, DELETE, UPDATE ON DATABASE::MontrealScenicTours TO Majeed WITH GRANT OPTION
+GRANT ALTER, CREATE ON DATABASE::MontrealScenicTours TO Sabrina
+GRANT ALL PRIVILEGES ON DATABASE::MontrealScenicTours TO sysadmin WITH GRANT OPTION
 
 
 -- stored procedure
