@@ -151,13 +151,13 @@ MAXVALUE 9999
 NO CYCLE 
 NO CACHE;
 
-CREATE SEQUENCE tripID_next 
+/*CREATE SEQUENCE tripID_next 
 START WITH 1001
 INCREMENT BY 1
 MINVALUE 1001
 MAXVALUE 9999
 NO CYCLE 
-NO CACHE;
+NO CACHE;repeated*/ 
 
 CREATE SEQUENCE visitID_next 
 START WITH 1001
@@ -220,7 +220,6 @@ INSERT INTO Qualification (Guide_ID, Tour_ID, Qual_Is_Rqd, Qual_Date) VALUES
 	('GD1005', 'TR1002', 1, '2012-03-26');
 
 /*TourVenue*/
-
 INSERT INTO TourVenue (Ven_ID, Tour_ID) VALUES
 	('VN1001', 'TR1004'),
 	('VN1002', 'TR1001'),
@@ -246,11 +245,24 @@ INSERT INTO Visit (Trip_ID, Tourist_ID) VALUES
 	('TP1004', 'TS1002'), 
 	('TP1005', 'TS1004');
 
+-- Queries:
+-- Query to view tour guides and their qualifications, listed by order of oldest to newest hire. 
+SELECT G.GUIDE_ID, G.GUIDE_NAME, G.GUIDE_DOH, Q.Guide_ID, Q.Qual_Date FROM GUIDE G
+JOIN Qualification Q ON G.Guide_ID = Q.Guide_ID
+ORDER BY G.Guide_DOH;
 
---views
+-- Query to view in depth information regarding each tour. 
+SELECT TR.TOUR_ID, TR.TOUR_NAME, TR.TOUR_DUR, TP.TRIP_START, G.Guide_Name, G.Guide_PHONE FROM TRIP TP
+JOIN TOUR TR ON TR.TOUR_ID = TP.Tour_ID
+JOIN GUIDE G ON TP.GUIDE_ID = G.GUIDE_ID
+ORDER BY TR.TOUR_DUR DESC;
 
+-- QUERY to view venue location
+SELECT V.Ven_ID, V.Ven_Name,V.Ven_Desc, P.Place_Stno, P.Place_Stname, P.Place_Postal FROM VENUE V
+JOIN PLACE P ON V.Place_ID = P.Place_ID;
 
---adding venue column on tour as a foreign key for the locations
+-- Views:
+-- Adding venue column on tour as a foreign key for the locations
 ALTER TABLE TOUR
 	ADD Ven_ID CHAR(6);
 ALTER TABLE TOUR
@@ -268,41 +280,117 @@ UPDATE TOUR
 SET Ven_ID = 'VN1004' WHERE Tour_ID = 'TR1005';
 
 --VIew to see the details of reservations made in the visit table like who made them, where, and who is givivng them
+CREATE VIEW visit_Reservation_User AS
+-- View to see the details of reservations made in the visit table like who made them, where, and who is givivng them
 ALTER VIEW visit_Reservation_User AS
 SELECT Tourist_Name, Tourist_Phone, Tour_Name, Trip_Start, Tour_Fee, Guide_Name, Ven_name
 FROM TOURIST ts 
 JOIN VISIT vs ON ts.Tourist_ID = vs.Tourist_ID				
 JOIN TRIP tr ON vs.Trip_ID = tr.Trip_ID
 JOIN TOUR tour ON tour.Tour_ID = tr.Tour_ID
-JOIN GUIDE g ON tr.Guide_ID = g.Guide_Name
+JOIN GUIDE g ON tr.Guide_ID = g.Guide_ID
 JOIN Venue ven ON ven.Ven_ID = tour.Ven_ID;
 
+select * from visit_Reservation_User --empty table
 
 --just a little view that displays the tours by lowest price to largest
+ALTER VIEW order_Tours_and_Venues AS
+SELECT  Tour_Name, Tour_Fee, Ven_Name as 'Location visited', Place_Stname as Adress FROM TOUR t
+JOIN Venue v ON v.Ven_ID = t.Ven_ID
+JOIN PLACE p ON p.Place_ID = v.Place_ID
+--ORDER BY Tour_Fee;
+
+
+-- just a little view that displays the tours by lowest price to largest
 CREATE VIEW order_Tours_and_Venues AS
 SELECT  Tour_Name, Tour_Dur, Tour_Fee, Ven_Name as 'Location visited' FROM TOUR t
 JOIN Venue v ON v.Ven_ID = t.Ven_ID;
 ;
 
 
-
-
---////////////////////////
-
---stored procedure
-go
-CREATE PROCEDURE join_randomTrip(@touristId CHAR(6))
+-- Triggers:
+CREATE TRIGGER UNQUALIFIED_GUIDE_TRIGGER
+ON TRIP
+INSTEAD OF INSERT
 AS
 BEGIN
-	DECLARE @randomTripID CHAR(6) = (SELECT TOP 1 * FROM Trip ORDER BY NEWID())
+DECLARE @GUIDE_IDINS CHAR(6)
+DECLARE @TOUR_IDINS CHAR(6)
 
-	Begin try
-		IF EXISTS (SELECT * FROM VISIT WHERE Trip_ID = @randomTripID AND Tourist_ID = @touristId)
-		begin
-			print 'It seems you have already completed and hopefully enjoyed this tour!'
-		end
+SELECT @GUIDE_IDINS = Guide_ID,
+@TOUR_IDINS = TOUR_ID
+FROM INSERTED
+BEGIN TRY
+	IF EXISTS (SELECT * FROM Qualification
+			   WHERE Guide_ID = @GUIDE_IDINS AND Tour_ID = @TOUR_IDINS )
+	BEGIN
+	INSERT INTO Trip
+	SELECT * FROM inserted
+	END
+	ELSE
+	BEGIN
+	RAISERROR('This guide is not qualified for this trip', 16, 1)
+	END
+END TRY
 
-		ELSE
+BEGIN CATCH
+    DECLARE @ErrorMessage NVARCHAR(4000);
+    DECLARE @ErrorSeverity INT;
+    DECLARE @ErrorState INT;
+
+    SELECT
+        @ErrorMessage = ERROR_MESSAGE(),
+        @ErrorSeverity = ERROR_SEVERITY(),
+        @ErrorState = ERROR_STATE();
+
+    RAISERROR (@ErrorMessage,@ErrorSeverity,@ErrorState);
+END CATCH;
+END;
+
+select * from order_Tours_and_Venues
+
+SELECT * FROM Qualification;
+SELECT * FROM Trip;
+
+
+select * from Venue
+select * from Place
+
+--stored procedure
+INSERT INTO Visit VALUES ('TP1001', 'TS1005')
+
+
+  
+--FIRING THE TRIGGER WITH VALID QUAL
+INSERT INTO Trip (Trip_ID, Trip_Start, Tour_ID, Guide_ID)
+VALUES (CONCAT('TP',NEXT VALUE FOR tripID_next), '2024-12-01 14:00:00', 'TR1005', 'GD1002');
+
+--FIRING THE TRIGGER WITH INVALID QUAL
+INSERT INTO Trip (Trip_ID, Trip_Start, Tour_ID, Guide_ID)
+VALUES (CONCAT('TP',NEXT VALUE FOR tripID_next), '2024-12-01 14:00:00', 'TR1009', 'GD1002');
+
+-- Roles:
+-- role for reading from the database but not alter it
+CREATE ROLE Customer_Service AUTHORIZATION db_datareader
+-- role for inserting, deleting and updating table from the database
+CREATE ROLE Tour_Manager AUTHORIZATION db_datawriter
+-- role for admin, it administrates the employers by altering any users
+CREATE ROLE Administrator AUTHORIZATION db_accessadmin
+-- role for the people that backs up the database
+CREATE ROLE Backup_Management AUTHORIZATION db_backupoperator
+-- sys admin.
+CREATE ROLE System_Admin AUTHORIZATION db_owner
+
+
+-- stored procedure
+go
+CREATE PROCEDURE join_Random_Trip (@touristID CHAR(6))
+AS
+BEGIN
+	DECLARE @randomTripID CHAR(6) = (SELECT TOP 1 * FROM TRIP ORDER BY NEWID());
+	
+	Begin Try
+		IF NOT EXISTS (SELECT 1 FROM Visit WHERE (Trip_ID = @randomTripID AND @touristID = Tourist_ID))
 		begin
 			INSERT INTO VISIT VALUES(@touristId, @randomTripID)
 			DECLARE @TripInfo VARCHAR(100) = (SELECT TOP 1 Tour_Name --ensures only 1 value is assigned
@@ -311,16 +399,25 @@ BEGIN
 											WHERE Trip_ID = @randomTripID)
 			print CONCAT('You have been assigned to ', @TripInfo, ', we hope you enjoy your tour :)');
 		end
-	End try
-	BEGIN CATCH
-		THROW
-		print'Oops something must have gone wrong please be patient'
-	End CATCH
+		ELSE
+			print 'It seems you have already completed and hopefully enjoyed this tour!'
+	End Try
+	Begin Catch
+	THROW 
+	print 'Oops something must have gone wrong please be patient'
+	DECLARE @ErrorMessage NVARCHAR(4000);
+    DECLARE @ErrorSeverity INT;
+    DECLARE @ErrorState INT;
+
+    SELECT
+        @ErrorMessage = ERROR_MESSAGE(),
+        @ErrorSeverity = ERROR_SEVERITY(),
+        @ErrorState = ERROR_STATE();
+
+    RAISERROR (@ErrorMessage,@ErrorSeverity,@ErrorState);
+	End Catch;
 END;
-
-
-
-
+ 
 ALTER TABLE TRIP
 	DROP COLUMN Trip_Start; 
 
@@ -343,32 +440,49 @@ UPDATE TRIP
 SET Trip_Start = '2025-12-17 11:15'
 WHERE Trip_ID = 'TP1005';
 
---Stored procedure to cancel a reservation , but with condition that you cancel at least 4 hours before or ot will not allow you to cancel
+-- Stored procedure to cancel a reservation , but with condition that you cancel at least 4 hours before or ot will not allow you to cancel
 go
-ALTER PROCEDURE cancelReservation(@trip CHAR(6), @touristID CHAR(6))
+ALTER PROCEDURE cancelReservation(@tripID CHAR(6), @touristID CHAR(6))
 AS
 BEGIN
-DECLARE @startTime TIME = (SELECT trip_Start from TRIP where Trip_Id = @trip);
+DECLARE @startTime TIME = (SELECT trip_Start from TRIP where Trip_Id = @tripID);
 declare @timeDifference INT = DATEDIFF(SECOND,@startTime, (GETDATE())) / 3600; --get hours
 BEGIN TRY
-IF(@timeDifference >= 4)
-	begin 
-	DELETE from VISIT WHERE Trip_ID = @trip AND Tourist_ID = @touristID;
-	 print 'your reservation was successfully cancelled'
+IF  NOT EXISTS (SELECT * FROM Visit WHERE (Trip_ID = @tripID AND @touristId = Tourist_ID))
+	begin
+	print ' You cannot cancel a reservation that has not been made'
 	end
 ELSE
-	begin 
-			print'sorry you cannot cancel this reservation as the limit for cancellation is 4 hours ahead'
-	end
+	begin
+		IF(@timeDifference >= 4)
+			begin 
+			DELETE from VISIT WHERE Trip_ID = @tripID AND Tourist_ID = @touristID;
+			 print 'your reservation was successfully cancelled'
+			end
+		ELSE
+			begin 
+					print'sorry you cannot cancel this reservation as the limit for cancellation is 4 hours ahead'
+			end
+		end
 END TRY
 begin catch
 	THROW
-	print ' something must have  goe wrong'
+	print ' something must have  gone wrong'
+	DECLARE @ErrorMessage NVARCHAR(4000);
+    DECLARE @ErrorSeverity INT;
+    DECLARE @ErrorState INT;
+
+    SELECT
+        @ErrorMessage = ERROR_MESSAGE(),
+        @ErrorSeverity = ERROR_SEVERITY(),
+        @ErrorState = ERROR_STATE();
+
+    RAISERROR (@ErrorMessage,@ErrorSeverity,@ErrorState);
 end catch
 END;
 --need to add checking if the reservation exsists
 
-EXec cancelReservation 'TP1001', 'TS1005'
+EXec cancelReservation 'TP1001', 'TS1003'
 --iteneraire, price venues, hours, guide
 
 SELECT * FROM GUIDE;
@@ -381,3 +495,6 @@ SELECT * FROM Tour;
 SELECT * FROM Venue;
 
 SELECT * FROM Visit;
+
+SELECT * FROM visit_Reservation_User
+select * from order_Tours_and_Venues
