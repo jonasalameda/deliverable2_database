@@ -446,7 +446,7 @@ ALTER PROCEDURE cancelReservation(@tripID CHAR(6), @touristID CHAR(6))
 AS
 BEGIN
 DECLARE @startTime TIME = (SELECT trip_Start from TRIP where Trip_Id = @tripID);
-declare @timeDifference INT = DATEDIFF(SECOND,@startTime, (GETDATE())) / 3600; --get hours
+declare @timeDifference INT = DATEDIFF(DAY,@startTime, (GETDATE())); --get days
 BEGIN TRY
 IF  NOT EXISTS (SELECT * FROM Visit WHERE (Trip_ID = @tripID AND @touristId = Tourist_ID))
 	begin
@@ -454,14 +454,14 @@ IF  NOT EXISTS (SELECT * FROM Visit WHERE (Trip_ID = @tripID AND @touristId = To
 	end
 ELSE
 	begin
-		IF(@timeDifference >= 4)
+		IF(@timeDifference >= 3)
 			begin 
 			DELETE from VISIT WHERE Trip_ID = @tripID AND Tourist_ID = @touristID;
 			 print 'your reservation was successfully cancelled'
 			end
 		ELSE
 			begin 
-					print'sorry you cannot cancel this reservation as the limit for cancellation is 4 hours ahead'
+					print'sorry you cannot cancel this reservation as the limit for cancellation is 3 days ahead'
 			end
 		end
 END TRY
