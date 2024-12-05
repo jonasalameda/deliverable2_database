@@ -297,7 +297,7 @@ BEGIN
 			DECLARE @TripInfo VARCHAR(100) = (SELECT TOP 1 Tour_Name --ensures only 1 value is assigned
 											FROM TRIP 
 											JOIN TOUR ON trip.Tour_ID = tour.Tour_ID
-											WHERE Trip_ID = 'TR1001')
+											WHERE Trip_ID = @randomTripID)
 			print CONCAT('You have been assigned to ', @TripInfo, ', we hope you enjoy your tour :)');
 		end
 	End try
