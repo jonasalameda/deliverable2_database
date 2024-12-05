@@ -237,45 +237,68 @@ INSERT INTO Visit (Trip_ID, Tourist_ID) VALUES
 
 
 --views
+
+
+--adding venue column on tour as a foreign key for the locations
+ALTER TABLE TOUR
+	ADD Ven_ID CHAR(6);
+ALTER TABLE TOUR
+	ADD CONSTRAINT Tour_Ven_ID_fk FOREIGN KEY (Ven_ID) REFERENCES VENUE;
+
+UPDATE TOUR 
+SET Ven_ID = 'VN1002' WHERE Tour_ID = 'TR1001';
+UPDATE TOUR
+SET Ven_ID = 'VN1003' WHERE Tour_ID = 'TR1002';
+UPDATE TOUR
+SET Ven_ID = 'VN1005' WHERE Tour_ID = 'TR1003';
+UPDATE TOUR
+SET Ven_ID = 'VN1001' WHERE Tour_ID = 'TR1004';
+UPDATE TOUR
+SET Ven_ID = 'VN1004' WHERE Tour_ID = 'TR1005';
+
 --VIew to see the details of reservations made in the visit table like who made them, where, and who is givivng them
-CREATE VIEW visit_Reservation_User AS
-SELECT Tourist_Name, Tourist_Phone, Tour_Name, Ven_Name, Trip_Start, Tour_Fee, Guide_Name
-FROM TOURIST ts JOIN VISIT vs ON ts.Tourist_ID = vs.Tourist_ID
-				JOIN TRIP tr ON vs.Trip_ID = tr.Trip_ID
-				JOIN TOUR tour ON tour.Tour_ID = tr.Tour_ID
-				JOIN GUIDE g ON tr.Guide_ID = g.Guide_Name
-				JOIN Venue v ON ts.Ven_ID = v.Ven_ID;
-ORDER BY Trip_Start ASC;
+ALTER VIEW visit_Reservation_User AS
+SELECT Tourist_Name, Tourist_Phone, Tour_Name, Trip_Start, Tour_Fee, Guide_Name, Ven_name
+FROM TOURIST ts 
+JOIN VISIT vs ON ts.Tourist_ID = vs.Tourist_ID				
+JOIN TRIP tr ON vs.Trip_ID = tr.Trip_ID
+JOIN TOUR tour ON tour.Tour_ID = tr.Tour_ID
+JOIN GUIDE g ON tr.Guide_ID = g.Guide_Name
+JOIN Venue ven ON ven.Ven_ID = tour.Ven_ID;
+
 
 --just a little view that displays the tours by lowest price to largest
-CREATE VIEW order_Tours_By_Price_Ascending AS
-SELECT  Tour_Name, Tour_Dur, Tour_Fee FROM TOUR
-ORDER BY Tour_Fee;
+CREATE VIEW order_Tours_and_Venues AS
+SELECT  Tour_Name, Tour_Dur, Tour_Fee, Ven_Name as 'Location visited' FROM TOUR t
+JOIN Venue v ON v.Ven_ID = t.Ven_ID;
+;
 
 
 
-////////////////////////
+
+--////////////////////////
 
 --stored procedure
 go
 CREATE PROCEDURE join_randomTrip(@touristId CHAR(6))
 AS
 BEGIN
-	DECLARE @randomTripID CHAR(6) = (SELECT TOP 1 * FROM your_table
-									ORDER BY NEWID());
+	DECLARE @randomTripID CHAR(6) = (SELECT TOP 1 * FROM Trip ORDER BY NEWID())
 
 	Begin try
-		IF EXISTS(SELECT * FROM VISIT WHERE Trip_ID = @randomTrip AND Tourist_ID = @tourist)
+		IF EXISTS (SELECT * FROM VISIT WHERE Trip_ID = @randomTripID AND Tourist_ID = @touristId)
 		begin
 			print 'It seems you have already completed and hopefully enjoyed this tour!'
 		end
 
 		ELSE
 		begin
-			INSERT INTO VISIT VALUES(@tourist, @randomTripID)
-			DECLARE @TripInfo VARCHAR(100) = (SELECT Tour_Name FROM TRIP JOIN TOUR ON trip.Tour_ID = tour.Tour_ID
-												WHERE Trip_ID = @randomTripID)
-			print CONCAT('You have been assigned to ', @TripInfo, ', we hope you enjoy your tour :)'
+			INSERT INTO VISIT VALUES(@touristId, @randomTripID)
+			DECLARE @TripInfo VARCHAR(100) = (SELECT TOP 1 Tour_Name --ensures only 1 value is assigned
+											FROM TRIP 
+											JOIN TOUR ON trip.Tour_ID = tour.Tour_ID
+											WHERE Trip_ID = 'TR1001')
+			print CONCAT('You have been assigned to ', @TripInfo, ', we hope you enjoy your tour :)');
 		end
 	End try
 	BEGIN CATCH
@@ -284,30 +307,66 @@ BEGIN
 	End CATCH
 END;
 
+
+
+
+ALTER TABLE TRIP
+	DROP COLUMN Trip_Start; 
+
+ALTER TABLE TRIP
+	ADD trip_Start DATETIME;
+
+UPDATE TRIP
+SET Trip_Start = '2025-05-26 10:30'
+WHERE Trip_ID = 'TP1001';
+UPDATE TRIP
+SET Trip_Start = '2025-10-20 12:00'
+WHERE Trip_ID = 'TP1002';
+UPDATE TRIP
+SET Trip_Start = '2025-08-14 08:45'
+WHERE Trip_ID = 'TP1003';
+UPDATE TRIP
+SET Trip_Start = '2025-04-30 10:00'
+WHERE Trip_ID = 'TP1004';
+UPDATE TRIP
+SET Trip_Start = '2025-12-17 11:15'
+WHERE Trip_ID = 'TP1005';
+
 --Stored procedure to cancel a reservation , but with condition that you cancel at least 4 hours before or ot will not allow you to cancel
-CREATE PROCEDURE cancelReservation(@trip CHAR(6), @touristID CHAR(6))
+go
+ALTER PROCEDURE cancelReservation(@trip CHAR(6), @touristID CHAR(6))
 AS
 BEGIN
-DECLARE @startTime = (SELECT trip_Start from TRIP where Trip_Id = @trip);
-declare @timeDifference = TIMEDIFF(@startTime, (SELECT TIME(NOW()));
-IF(@timedifference <= 4)
-	begin
-		print'sorry you cannot cancel this reservation as the limit for cancellation is 4 hours ahead'
+DECLARE @startTime TIME = (SELECT trip_Start from TRIP where Trip_Id = @trip);
+declare @timeDifference INT = DATEDIFF(SECOND,@startTime, (GETDATE())) / 3600; --get hours
+BEGIN TRY
+IF(@timeDifference >= 4)
+	begin 
+	DELETE from VISIT WHERE Trip_ID = @trip AND Tourist_ID = @touristID;
+	 print 'your reservation was successfully cancelled'
 	end
 ELSE
 	begin 
-	 DELETE from VISIT WHERE Trip_ID = @trip AND Touris_ID = @touristID;
-	 print 'your reservation was successfully cancelled'
+			print'sorry you cannot cancel this reservation as the limit for cancellation is 4 hours ahead'
 	end
+END TRY
+begin catch
+	THROW
+	print ' something must have  goe wrong'
+end catch
 END;
+--need to add checking if the reservation exsists
+
+EXec cancelReservation 'TP1001', 'TS1005'
 --iteneraire, price venues, hours, guide
 
 SELECT * FROM GUIDE;
 SELECT * FROM PLACE;
 SELECT * FROM Qualification;
-SELECT * FROM Tour;
 SELECT * FROM Tourist;
 SELECT * FROM TourVenue;
 SELECT * FROM Trip;
+SELECT * FROM Tour;
 SELECT * FROM Venue;
+
 SELECT * FROM Visit;
