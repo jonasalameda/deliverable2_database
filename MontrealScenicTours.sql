@@ -435,13 +435,17 @@ UPDATE TRIP
 SET Trip_Start = '2025-12-17 11:15'
 WHERE Trip_ID = 'TP1005';
 
+GO
+CREATE FUNCTION checkTimeDiff(@tripTime DATETIME)
+RETURNS INT AS BEGIN
+RETURN DATEDIFF(DAY,@tripTime, (GETDATE())); --get days
+END
 -- Stored procedure to cancel a reservation , but with condition that you cancel at least 4 hours before or ot will not allow you to cancel
 go
 ALTER PROCEDURE cancelReservation(@tripID CHAR(6), @touristID CHAR(6))
 AS
 BEGIN
-DECLARE @startTime TIME = (SELECT trip_Start from TRIP where Trip_Id = @tripID);
-declare @timeDifference INT = DATEDIFF(DAY,@startTime, (GETDATE())); --get days
+DECLARE @startTime DATETIME = (SELECT trip_Start from TRIP where Trip_Id = @tripID);
 BEGIN TRY
 IF  NOT EXISTS (SELECT * FROM Visit WHERE (Trip_ID = @tripID AND @touristId = Tourist_ID))
 	begin
@@ -449,7 +453,7 @@ IF  NOT EXISTS (SELECT * FROM Visit WHERE (Trip_ID = @tripID AND @touristId = To
 	end
 ELSE
 	begin
-		IF(@timeDifference >= 3)
+		IF((SELECT dbo.checkTimeDiff(@startTime)) >= 3)
 			begin 
 			DELETE from VISIT WHERE Trip_ID = @tripID AND Tourist_ID = @touristID;
 			 print 'your reservation was successfully cancelled'
