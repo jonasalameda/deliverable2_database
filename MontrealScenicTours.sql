@@ -1,6 +1,17 @@
 CREATE DATABASE MontrealScenicTours
 USE MontrealScenicTours
 
+-- role for data reading
+CREATE ROLE Customer_Service AUTHORIZATION db_datareader
+-- role for data writing
+CREATE ROLE Tour_Manager AUTHORIZATION db_datawriter
+-- role for admin, it administrates the employers
+CREATE ROLE Administrator AUTHORIZATION db_accessadmin
+-- role for the backup people
+CREATE ROLE Backup_Management AUTHORIZATION db_backupoperator
+-- sys admin
+CREATE ROLE System_Admin AUTHORIZATION db_owner
+
 CREATE TABLE Place (
 	Place_ID CHAR(6) CONSTRAINT Place_Place_ID_PK PRIMARY KEY (Place_ID),
 	Place_Stno INT,
