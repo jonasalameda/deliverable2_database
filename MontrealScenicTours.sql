@@ -382,7 +382,7 @@ go
 CREATE PROCEDURE join_Random_Trip (@touristID CHAR(6))
 AS
 BEGIN
-	DECLARE @randomTripID CHAR(6) = (SELECT TOP 1 * FROM TRIP ORDER BY NEWID());
+	DECLARE @randomTripID CHAR(6) = (SELECT TOP 1 Trip_ID FROM TRIP ORDER BY NEWID());
 	
 	Begin Try
 		IF NOT EXISTS (SELECT 1 FROM Visit WHERE (Trip_ID = @randomTripID AND @touristID = Tourist_ID))
